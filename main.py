@@ -21,13 +21,13 @@ for filename in xlsx_files:
     term = os.path.basename(filename)
     ## Read data into Pandas DataFrame
     print(rf'Reading file into Pandas for {term}...')
-    survey_orig = pd.read_excel(filename,sheet_name='Sheet1',header=0)
-    capacity_orig = pd.read_excel(filename,sheet_name='Sheet2',header=0)
-    class_cap_orig = pd.read_excel(filename,sheet_name='Sheet3',header=0)
+    survey_orig = pd.read_excel(filename,sheet_name='data',header=0)
+    capacity_orig = pd.read_excel(filename,sheet_name='summary',header=0)
+    class_cap_orig = pd.read_excel(filename,sheet_name='detail',header=0)
     df_capacity = capacity_orig.sort_values(by='CAPACITY')
 
     # Exclude specific 'Course Offering SFID' from survey_orig
-    survey_orig = survey_orig[~survey_orig['Course Offering SFID'].isin(cancelled_course_list)]
+    survey_orig = survey_orig[~survey_orig['Course Offering SFID 18'].isin(cancelled_course_list)]
 
     for i in range(10):
         print(f'Starting Option {i}')
@@ -42,7 +42,7 @@ for filename in xlsx_files:
         df_ready = df.sort_values(by='RandomDigit')
         
         ## DF empty at this time
-        df_assigned = pd.DataFrame(columns=['UFID','Stu Name','Course Offering SFID','Topic','Class Number','RandomDigit'])
+        df_assigned = pd.DataFrame(columns=['UFID','Stu Name','Course Offering SFID 18','Topic','Class Number','RandomDigit'])
         
         print('Starting FOR Loop...')
         for index, row in df_capacity.iterrows():
@@ -56,15 +56,15 @@ for filename in xlsx_files:
             while iterator < number_of_students: 
                 iterator += 1
         ## Get the course Salesforce ID
-                criteria = row['Course Offering SFID']
+                criteria = row['Course Offering SFID 18']
 
         ## Find the first student who selected that course (it will be some sort of random numbers generated before)
                 try:
-                    first_matching_row = df_ready.loc[df_ready['Course Offering SFID'] == criteria].iloc[0]
+                    first_matching_row = df_ready.loc[df_ready['Course Offering SFID 18'] == criteria].iloc[0]
         ## Put the data into a new row and set as a DF 
-                    new_row = {'UFID': first_matching_row['UFID'], 'Stu Name': first_matching_row['Full Name'], 'Course Offering SFID': first_matching_row['Course Offering SFID'], 'Topic': first_matching_row['Topic'], 'RandomDigit': first_matching_row['RandomDigit']}
+                    new_row = {'UFID': first_matching_row['UFID'], 'Stu Name': first_matching_row['Full Name'], 'Course Offering SFID 18': first_matching_row['Course Offering SFID 18'], 'Topic': first_matching_row['Topic'], 'RandomDigit': first_matching_row['RandomDigit']}
                 except:
-                    new_row = {'UFID': r'DROP', 'Course Offering SFID': criteria}
+                    new_row = {'UFID': r'DROP', 'Course Offering SFID 18': criteria}
                 new_row_df = pd.DataFrame([new_row])
         ## Append the new row to the current DataFrame
                 df_assigned = pd.concat([df_assigned, new_row_df], ignore_index=True)
@@ -72,9 +72,9 @@ for filename in xlsx_files:
                 df_ready = df_ready[df_ready['UFID'] != first_matching_row['UFID']]
         
         ## Sort newly finished df_assigned by the course. This gets it ready to have the Class Numbers added
-        df_assigned_sorted = df_assigned.sort_values(by='Course Offering SFID')
+        df_assigned_sorted = df_assigned.sort_values(by='Course Offering SFID 18')
         ## Sort class_cap by the same field (placeholder rows will still be there)
-        df_class_cap_all = class_cap_orig.sort_values(by='Course Offering SFID')
+        df_class_cap_all = class_cap_orig.sort_values(by='Course Offering SFID 18')
 
         ## Create an empty list to hold the repeated Class Number values
         repeated_CNs = []
@@ -90,7 +90,7 @@ for filename in xlsx_files:
         df_assigned_sorted.drop( df_assigned_sorted[ df_assigned_sorted['UFID'].astype(str) == str(r'DROP') ].index, inplace=True)
 
         print('Writing to Excel...')
-        writer = pd.ExcelWriter(rf'{filedir}\{thedate}_{term}_Quest_Results_Version_{len(df_assigned_sorted)}_{i}.xlsx', engine='xlsxwriter')
+        writer = pd.ExcelWriter(rf'{filedir}\output_files\{thedate}_{term}_Quest_Results_Version_{len(df_assigned_sorted)}_{i}.xlsx', engine='xlsxwriter')
         df_assigned_sorted.to_excel(writer, sheet_name='assigned')
         df_ready.to_excel(writer, sheet_name='unassigned')
         class_cap_orig.to_excel(writer, sheet_name='class_cap')
