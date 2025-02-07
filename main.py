@@ -10,10 +10,10 @@ pd.options.mode.chained_assignment = None
 thedate = date.today()
 load_dotenv()
 filedir = os.getenv('PWD')
-path = rf'{filedir}\files_from_salesforce\*.xlsx'
+path = rf'{filedir}\source_files\*.xlsx'
 xlsx_files = glob.glob(path)
 
-cancelled_courses_file = rf'{filedir}\cancelled_courses.txt'  # Replace with the path to your file
+cancelled_courses_file = rf'{filedir}\source_files\cancelled_courses.txt'
 with open(cancelled_courses_file, 'r') as file:
     cancelled_course_list = [line.strip() for line in file.readlines()]
 
