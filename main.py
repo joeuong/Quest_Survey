@@ -6,6 +6,9 @@ import glob
 import random
 pd.options.mode.chained_assignment = None
 
+## todo URSP: first dibs at everything (honors or not honors)
+## todo Honors: if they picked Hons course, then they get that randomly first. Else, they get put in general pop
+
 ## Prep files, variables, and lists for the lopp
 thedate = date.today()
 load_dotenv()

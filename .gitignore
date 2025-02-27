@@ -1,3 +1,4 @@
 .env
 **output_files/*.xlsx
+**source_files/*.xlsx
 **files_from_salesforce/*.xlsx

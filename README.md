@@ -12,22 +12,32 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
 - Need two files: one for Summer and one for Fall. 
 - Give each file the name of the term in term-code format (e.g., "2245" or "2248")
 - Each file should have these tabs named like this (lowercase):
-    1. "**data**" (data from the survey):
-        - _UFID_
-        - _Course Offering SFID 18_ (SF18)
+    1. `data` (data from the survey):
+        - `UFID`
+        - `Course Offering SFID 18` (SF18)
             - Needs to be the 18-character version
-        - Topic
-    2. "**summary**" (summary data, aggregate data of Sheet 3): 
-        - _Course Offering SFID 18_
+        - `Topic`
+    2. `summary` (summary data, aggregate data of Sheet 3): 
+        - `Course Offering SFID 18`
             - Needs to be the 18-character version
-        - _CAPACITY_
+        - `CAPACITY`
             - Sum of all sections of the course using Sheet3
-    3. "**detail**" (data from SOC, requires student records access. Need to match TOPIC with CS name and translate SFID)
-        - _Course Offering SFID 18_
+    3. `detail` (data from SOC, requires student records access. Need to match TOPIC with CS name and translate SFID)
+        - `Course Offering SFID 18`
             - Needs to be the 18-character version
-        - _Topic_
-        - _CN_
-        - _C\_CAPACITY_
+        - `Topic`
+        - `CN`
+        - `C_CAPACITY`
+```    
+    Sheet 1 - Data
+        - Data from the Salesforce output
+    Sheet 2 - Summary
+        - Pivot data from Sheet 3 to get summary capacity
+    Sheet 3 - Detail
+        - Data comes from CS / SOC. 
+        - Match Quest 1 courses along with Class Nbrs with the SF18
+        - Match the CS name of the section up with the Topic shown to students in the Salesforce survey
+```
 
 ### Salesforce Data
 - Reports folder (must have read access): [CLAS > Quest](https://uf.lightning.force.com/lightning/r/Folder/00l4X000002nHiYQAU/view?queryScope=userFoldershttps://uf.lightning.force.com/lightning/r/Folder/00l4X000002nHiYQAU/view?queryScope=userFolders)
@@ -43,27 +53,21 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
 - Pull all Quest 1 courses along with Class Nbrs
     - Watch out for Honors and UFO sections in this step
 
-### Excel File
-    Sheet 1 - Data
-        - Data from the Salesforce output
-    Sheet 2 - Summary
-        - Pivot data from Sheet 3 to get summary capacity
-    Sheet 3 - Detail
-        - Data comes from CS / SOC. 
-        - Match Quest 1 courses along with Class Nbrs with the SF18
-        - Match the CS name of the section up with the Topic shown to students in the Salesforce survey
+## Run the script 
+- Place files into the `source_files` directory
+- Run `main.py`
+- Output files will be in the `output_files` directory
 
-## Prep and Clean file after run
+## Select and Clean file after run
 - Remove summer students who were moved to fall (checked for Summer Term Activation)
     - Can be done prior to running script. 
 - Remove students from both terms who did not have a term activation in either semester
     - Can be done prior to running script. 
-- Rename the CSV file as 
-- CSV Structure should be: 
-    - todo: figure out structure of CSV
-    - Probably UFID, STRM, CLASS_NBR
+- Rename each CSV file to `qbuenrollfile####.csv` where #### is the term code
+- Structure for CSV sent to UFIT should be: 
+    - `UFID, STRM, CLASS_NBR`
 
-## Run in Campus Solutions
+## Run in Campus Solutions (Query Based Update - QBU)
 - Meet with Quest Admin, Registrar's Admin(s), and UFIT 
     - In 2024, it was Kendall, Chadia/Rachel, and Monica, respectively
     - In 2025, ... 
