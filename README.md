@@ -17,6 +17,10 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
         - `Course Offering SFID 18` (SF18)
             - Needs to be the 18-character version
         - `Topic`
+        - New columns for 2025: prioritizing Honors students
+            - `Honors` 
+            - `URSP`
+            - `Honors Course`
     2. `summary` (summary data, aggregate data of Sheet 3): 
         - `Course Offering SFID 18`
             - Needs to be the 18-character version
@@ -30,7 +34,8 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
         - `C_CAPACITY`
 ```    
     Sheet 1 - Data
-        - Data from the Salesforce output
+        - Data from the Salesforce output (adding data for which courses are Honors)
+        - Data indicating which Students are URSP or Honors
     Sheet 2 - Summary
         - Pivot data from Sheet 3 to get summary capacity
     Sheet 3 - Detail
@@ -50,8 +55,9 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
             - It will have the _Topic_ as well which will need to be compared to the CS version
 
 ### Campus Solutions Data (WH)
-- Pull all Quest 1 courses along with Class Nbrs
-    - Watch out for Honors and UFO sections in this step
+- Pull all Quest 1 courses along with Class Nbrs (included SQL)
+- Match each course & class nbr with a _Course Offering ID 18_
+    - Some from CS will not have a _Course Offering ID 18_
 
 ## Run the script 
 - Place files into the `source_files` directory

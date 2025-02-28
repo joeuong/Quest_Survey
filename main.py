@@ -22,7 +22,6 @@ with open(cancelled_courses_file, 'r') as file:
 
 for filename in xlsx_files:
     term = os.path.basename(filename)
-    ## Read data into Pandas DataFrame
     print(rf'Reading file into Pandas for {term}...')
     survey_orig = pd.read_excel(filename,sheet_name='data',header=0)
     capacity_orig = pd.read_excel(filename,sheet_name='summary',header=0)
@@ -34,9 +33,7 @@ for filename in xlsx_files:
 
     for i in range(10):
         print(f'Starting Option {i}')
-
-        ## Assigning Random digits to the last column and then sorting by that column
-        print('Assigning random numbers...')
+        print('Assigning random numbers...') ## to the last column and then sorting by that column
         df = survey_orig
         random_digits = [random.randint(100000, 999999) for _ in range(len(df))]
         df['RandomDigit'] = random_digits
@@ -44,6 +41,8 @@ for filename in xlsx_files:
         ## This DF is ready to be used to find courses
         df_ready = df.sort_values(by='RandomDigit')
         
+        ## USRP and Honors probably goes here
+
         ## DF empty at this time
         df_assigned = pd.DataFrame(columns=['UFID','Stu Name','Course Offering SFID 18','Topic','Class Number','RandomDigit'])
         
