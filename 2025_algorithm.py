@@ -20,28 +20,31 @@ with open(cancelled_courses_file, 'r') as file:
     cancelled_course_list = [line.strip() for line in file.readlines()]
 
 for filename in xlsx_files:
-    term = os.path.basename(filename)
+    term = os.path.splitext(os.path.basename(filename))[0]
     print(rf'Reading file into Pandas for {term}...')
     survey_orig = pd.read_excel(filename, sheet_name='data', header=0)
-    capacity_orig = pd.read_excel(filename, sheet_name='summary', header=0)
+    df_capacity = pd.read_excel(filename, sheet_name='summary', header=0)
     class_cap_orig = pd.read_excel(filename, sheet_name='detail', header=0)
-    df_capacity = capacity_orig.sort_values(by='CAPACITY')
+    # df_capacity = capacity_orig.sort_values(by='CAPACITY')
 
     # Exclude cancelled courses
-    survey_orig = survey_orig[~survey_orig['Course Offering SFID 18'].isin(cancelled_course_list)]
+    survey_orig = survey_orig[~survey_orig['Course Offering Id 18'].isin(cancelled_course_list)]
 
     # Extract students based on flags
     ursp_students = survey_orig[survey_orig['URSP'] == 1]
     honors_students_honors_courses = survey_orig[(survey_orig['Honors'] == 1) & (survey_orig['Honors Course'] == 1) & (survey_orig['URSP'] != 1)]
     honors_students_general_courses = survey_orig[(survey_orig['Honors'] == 1) & (survey_orig['Honors Course'] != 1) & (survey_orig['URSP'] != 1)]
-    general_students = survey_orig[(survey_orig['Honors'] != 1) & (survey_orig['URSP'] != 1)]
+    general_students = survey_orig[(survey_orig['Honors'] != 1) & (survey_orig['URSP'] != 1) & (survey_orig['Honors Course'] != 1)]
 
-    for i in range(10):
+    for i in range(1):
         print(f'Starting Option {i}')
         print('Assigning random numbers...')
         
         # Assign random numbers
-        survey_orig['RandomDigit'] = [random.randint(100000, 999999) for _ in range(len(survey_orig))]
+        ursp_students['RandomDigit'] = [random.randint(100000, 999999) for _ in range(len(ursp_students))]
+        honors_students_honors_courses['RandomDigit'] = [random.randint(100000, 999999) for _ in range(len(honors_students_honors_courses))]
+        honors_students_general_courses['RandomDigit'] = [random.randint(100000, 999999) for _ in range(len(honors_students_general_courses))]
+        general_students['RandomDigit'] = [random.randint(100000, 999999) for _ in range(len(general_students))]
 
         # Shuffle and sort each group
         ursp_students = ursp_students.sample(frac=1).sort_values(by='RandomDigit')
@@ -56,35 +59,35 @@ for filename in xlsx_files:
             honors_students_general_courses,  # Other Honors students
             general_students  # General population
         ])
+        df_assigned = pd.DataFrame(columns=['UFID', 'Stu Name', 'Course Offering Id 18', 'Topic', 'Class Number', 'RandomDigit'])
 
-        df_assigned = pd.DataFrame(columns=['UFID', 'Stu Name', 'Course Offering SFID 18', 'Topic', 'Class Number', 'RandomDigit'])
-        
         print('Starting FOR Loop...')
         for _, row in df_capacity.iterrows():
             number_of_students = row['CAPACITY']
-            criteria = row['Course Offering SFID 18']
+            criteria = row['Course Offering Id 18']
             iterator = 0
-            
+        
             while iterator < number_of_students:
                 iterator += 1
                 try:
-                    first_matching_row = df_ready.loc[df_ready['Course Offering SFID 18'] == criteria].iloc[0]
+                    first_matching_row = df_ready.loc[df_ready['Course Offering Id 18'] == criteria].iloc[0]
                     new_row = {
                         'UFID': first_matching_row['UFID'],
                         'Stu Name': first_matching_row['Full Name'],
-                        'Course Offering SFID 18': first_matching_row['Course Offering SFID 18'],
+                        'Course Offering Id 18': first_matching_row['Course Offering Id 18'],
                         'Topic': first_matching_row['Topic'],
                         'RandomDigit': first_matching_row['RandomDigit']
                     }
                 except:
-                    new_row = {'UFID': 'DROP', 'Course Offering SFID 18': criteria}
-                
+                    first_matching_row = {'UFID': 'DROP', 'Course Offering Id 18': criteria}
+                    new_row = first_matching_row
+
                 new_row_df = pd.DataFrame([new_row])
                 df_assigned = pd.concat([df_assigned, new_row_df], ignore_index=True)
                 df_ready = df_ready[df_ready['UFID'] != first_matching_row['UFID']]
 
-        df_assigned_sorted = df_assigned.sort_values(by='Course Offering SFID 18')
-        df_class_cap_all = class_cap_orig.sort_values(by='Course Offering SFID 18')
+        df_assigned_sorted = df_assigned.sort_values(by='Course Offering Id 18')
+        df_class_cap_all = class_cap_orig.sort_values(by='Course Offering Id 18')
 
         repeated_CNs = []
         for _, row in df_class_cap_all.iterrows():
@@ -100,5 +103,6 @@ for filename in xlsx_files:
         class_cap_orig.to_excel(writer, sheet_name='class_cap')
         writer.close()
         print(f'Completed Option {i} with {len(df_assigned_sorted)} rows')
+        print('---')
     
     print(rf'Finished with {term}')
