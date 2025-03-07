@@ -14,20 +14,25 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
 - Each file should have these tabs named like this (lowercase):
     1. `data` (data from the survey):
         - `UFID`
-        - `Course Offering SFID 18` (SF18)
+        - `Course Offering Id 18` (SF18)
             - Needs to be the 18-character version
         - `Topic`
-        - New columns for 2025: prioritizing Honors students
-            - `Honors` 
+        - New columns for 2025: prioritizing Honors students:
             - `URSP`
+            - `Honors` (Honors students)
             - `Honors Course`
     2. `summary` (summary data, aggregate data of Sheet 3): 
-        - `Course Offering SFID 18`
+        - `Course Offering Id 18` (SF18)
             - Needs to be the 18-character version
         - `CAPACITY`
             - Sum of all sections of the course using Sheet3
+        - `PRIORTIY`
+            - Sort the courses by priority:
+                - Honors classes first
+                - Lower picked classes next
+                - Then everything else by number of picks from the Survey Results
     3. `detail` (data from SOC, requires student records access. Need to match TOPIC with CS name and translate SFID)
-        - `Course Offering SFID 18`
+        - `Course Offering Id 18` (SF18)
             - Needs to be the 18-character version
         - `Topic`
         - `CN`
@@ -38,6 +43,7 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
         - Data indicating which Students are URSP or Honors
     Sheet 2 - Summary
         - Pivot data from Sheet 3 to get summary capacity
+        - Then sort by priority courses
     Sheet 3 - Detail
         - Data comes from CS / SOC. 
         - Match Quest 1 courses along with Class Nbrs with the SF18
@@ -49,15 +55,15 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
     - Need two files: 
         1. **Quest Course Connections** 
             - This is the survey data with student information
-            - Includes _Course Offering ID 18_ and Student information
+            - Includes _Course Offering Id 18_ and Student information
         2. **Quest Course Offerings** 
-            - This is the file with the _Course Offering ID 18_ that will need to be read by the script
+            - This is the file with the _Course Offering Id 18_ that will need to be read by the script
             - It will have the _Topic_ as well which will need to be compared to the CS version
 
 ### Campus Solutions Data (WH)
 - Pull all Quest 1 courses along with Class Nbrs (included SQL)
-- Match each course & class nbr with a _Course Offering ID 18_
-    - Some from CS will not have a _Course Offering ID 18_
+- Match each course & class nbr with a _Course Offering Id 18_
+    - Some from CS will not have a _Course Offering Id 18_
 
 ## Run the script 
 - Place files into the `source_files` directory
