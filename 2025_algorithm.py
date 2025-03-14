@@ -30,33 +30,34 @@ for filename in xlsx_files:
     # Exclude cancelled courses
     survey_orig = survey_orig[~survey_orig['Course Offering Id 18'].isin(cancelled_course_list)]
 
-    # Extract students based on flags
-    ursp_students = survey_orig[survey_orig['URSP'] == 1]
+    # Extract students based on flags. Prioritize later in the script by strategic order
+    ursp_students_honors_courses = survey_orig[(survey_orig['URSP'] == 1) & (survey_orig['Honors Course'] == 1)]
+    ursp_students_general_courses = survey_orig[(survey_orig['URSP'] == 1) & (survey_orig['Honors Course'] != 1)]
     honors_students_honors_courses = survey_orig[(survey_orig['Honors'] == 1) & (survey_orig['Honors Course'] == 1) & (survey_orig['URSP'] != 1)]
-    honors_students_general_courses = survey_orig[(survey_orig['Honors'] == 1) & (survey_orig['Honors Course'] != 1) & (survey_orig['URSP'] != 1)]
-    general_students = survey_orig[(survey_orig['Honors'] != 1) & (survey_orig['URSP'] != 1) & (survey_orig['Honors Course'] != 1)]
+    # honors_students_general_courses = survey_orig[(survey_orig['Honors'] == 1) & (survey_orig['Honors Course'] != 1) & (survey_orig['URSP'] != 1)]
+    general_students = survey_orig[(survey_orig['URSP'] != 1) & (survey_orig['Honors Course'] != 1)]
 
     for i in range(1):
         print(f'Starting Option {i}')
         print('Assigning random numbers...')
         
         # Assign random numbers
-        ursp_students['RandomDigit'] = [random.randint(100000, 999999) for _ in range(len(ursp_students))]
+        ursp_students_honors_courses['RandomDigit'] = [random.randint(100000, 999999) for _ in range(len(ursp_students_honors_courses))]
+        ursp_students_general_courses['RandomDigit'] = [random.randint(100000, 999999) for _ in range(len(ursp_students_general_courses))]
         honors_students_honors_courses['RandomDigit'] = [random.randint(100000, 999999) for _ in range(len(honors_students_honors_courses))]
-        honors_students_general_courses['RandomDigit'] = [random.randint(100000, 999999) for _ in range(len(honors_students_general_courses))]
         general_students['RandomDigit'] = [random.randint(100000, 999999) for _ in range(len(general_students))]
 
         # Shuffle and sort each group
-        ursp_students = ursp_students.sample(frac=1).sort_values(by='RandomDigit')
+        ursp_students_honors_courses = ursp_students_honors_courses.sample(frac=1).sort_values(by='RandomDigit')
+        ursp_students_general_courses = ursp_students_general_courses.sample(frac=1).sort_values(by='RandomDigit')
         honors_students_honors_courses = honors_students_honors_courses.sample(frac=1).sort_values(by='RandomDigit')
-        honors_students_general_courses = honors_students_general_courses.sample(frac=1).sort_values(by='RandomDigit')
         general_students = general_students.sample(frac=1).sort_values(by='RandomDigit')
 
         # Concatenate in priority order
         df_ready = pd.concat([
-            ursp_students,  # URSP students go first
-            honors_students_honors_courses,  # Honors students who selected Honors courses
-            honors_students_general_courses,  # Other Honors students
+            ursp_students_honors_courses,  # URSP students go first
+            ursp_students_general_courses,  # Honors students who selected Honors courses
+            honors_students_honors_courses,  # Other Honors students
             general_students  # General population
         ])
         df_assigned = pd.DataFrame(columns=['UFID', 'Stu Name', 'Course Offering Id 18', 'Topic', 'Class Number', 'RandomDigit'])
