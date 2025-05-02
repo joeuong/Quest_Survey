@@ -18,9 +18,10 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
             - Needs to be the 18-character version
         - `Topic`
         - New columns for 2025: prioritizing Honors students:
-            - `URSP`
-            - `Honors` (Honors students)
-            - `Honors Course`
+            - Use a character of "1" to denote that this line meets column criteria
+                - `URSP`
+                - `Honors` (Honors students)
+                - `Honors Course`
     2. `summary` (summary data, aggregate data of Sheet 3): 
         - `Course Offering Id 18` (SF18)
             - Needs to be the 18-character version
@@ -65,21 +66,46 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
 - Match each course & class nbr with a _Course Offering Id 18_
     - Some from CS will not have a _Course Offering Id 18_
 
-## Run the script 
+## Production Day (You)
+- Download files from Salesforce
+    - Results
+    - Offering
+- Download files from Campus Solutions
+- Archive a copy of each file
+- In one `main` file with both Summer and Fall terms: 
+    - Rename/add additional tabs (`data`, `summary`, `detail`)
+    - `data`
+        - Delete UFO?
+        - Add in applicable columns (`Honors`, `Honors Course`, `URSP`)
+            - Use a character of "1" to denote that this line meets column criteria
+            - `Honors` and `Honors Course` can be determined on the sheet
+            - Identify and add `URSP` separately
+    - `summary`
+        - A pivot of the `detail` tab
+        - Determine the order of which this tab should be sorted
+            - Order will be the least picked courses first.
+    - `detail`
+        - Delete UFO?
+        - Add _Course Offering Id 18_ to each Class Num
+        - Add `C_CAPACITY` column
+        - Delete rows without a _Course Offering Id 18_
+
+### Run the script 
 - Place files into the `source_files` directory
 - Run `main.py`
 - Output files will be in the `output_files` directory
 
-## Select and Clean file after run
-- Remove summer students who were moved to fall (checked for Summer Term Activation)
-    - Can be done prior to running script. 
-- Remove students from both terms who did not have a term activation in either semester
-    - Can be done prior to running script. 
-- Rename each CSV file to `qbuenrollfile####.csv` where #### is the term code
-- Structure for CSV sent to UFIT should be: 
-    - `UFID, STRM, CLASS_NBR`
+## Registration Day
+### Select and Clean file after run (You)
+    - Remove summer students who were moved to fall (checked for Summer Term Activation)
+        - Can be done prior to running script. 
+    - Remove students from both terms who did not have a term activation in either semester
+        - Can be done prior to running script. 
+    - Rename each CSV file to `qbuenrollfile####.csv` where #### is the term code
+    - Structure for CSV sent to UFIT should be: 
+        - `UFID, STRM, CLASS_NBR`
 
-## Run in Campus Solutions (Query Based Update - QBU)
+### Run in Campus Solutions (OUR/Quest/Query Based Update - QBU)
 - Meet with Quest Admin, Registrar's Admin(s), and UFIT 
     - In 2024, it was Kendall, Chadia/Rachel, and Monica, respectively
     - In 2025, ... 

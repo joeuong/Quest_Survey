@@ -28,6 +28,7 @@ for filename in xlsx_files:
     # df_capacity = capacity_orig.sort_values(by='CAPACITY')
 
     # Exclude cancelled courses
+    # May be able to delete this step because the cancelled sections were being deleted out of the Connections data
     survey_orig = survey_orig[~survey_orig['Course Offering Id 18'].isin(cancelled_course_list)]
 
     # Extract students based on flags. Prioritize later in the script by strategic order
