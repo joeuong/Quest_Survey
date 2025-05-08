@@ -83,10 +83,12 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
         - A pivot of the `detail` tab
         - Determine the order of which this tab should be sorted
             - Order will be the least picked courses first.
+            - (optional) Add an `Order` column to ensure correct sorting
     - `detail`
         - Add `Course Offering Id 18` to each Class Num
         - Add `C_CAPACITY` column
         - Delete rows without a `Course Offering Id 18`
+        - Ensure Class Number column is named `CLASS_NUM`
 
 ### Run the script 
 - Place files into the `source_files` directory
