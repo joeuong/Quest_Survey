@@ -38,7 +38,7 @@ for filename in xlsx_files:
     # honors_students_general_courses = survey_orig[(survey_orig['Honors'] == 1) & (survey_orig['Honors Course'] != 1) & (survey_orig['URSP'] != 1)]
     general_students = survey_orig[(survey_orig['URSP'] != 1) & (survey_orig['Honors Course'] != 1)]
 
-    for i in range(1):
+    for i in range(4):
         print(f'Starting Option {i}')
         print('Assigning random numbers...')
         
@@ -93,7 +93,7 @@ for filename in xlsx_files:
 
         repeated_CNs = []
         for _, row in df_class_cap_all.iterrows():
-            repeated_CNs.extend([row['CN']] * row['C_CAPACITY'])
+            repeated_CNs.extend([row['CLASS_NUM']] * row['C_CAPACITY'])
 
         df_assigned_sorted['Class Number'] = repeated_CNs
         df_assigned_sorted.drop(df_assigned_sorted[df_assigned_sorted['UFID'] == 'DROP'].index, inplace=True)

@@ -56,15 +56,15 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
     - Need two files: 
         1. **Quest Course Connections** 
             - This is the survey data with student information
-            - Includes _Course Offering Id 18_ and Student information
+            - Includes `Course Offering Id 18` and Student information
         2. **Quest Course Offerings** 
-            - This is the file with the _Course Offering Id 18_ that will need to be read by the script
-            - It will have the _Topic_ as well which will need to be compared to the CS version
+            - This is the file with the `Course Offering Id 18` that will need to be read by the script
+            - It will have the `Topic` as well which will need to be compared to the CS version
 
 ### Campus Solutions Data (WH)
 - Pull all Quest 1 courses along with Class Nbrs (included SQL)
-- Match each course & class nbr with a _Course Offering Id 18_
-    - Some from CS will not have a _Course Offering Id 18_
+- Match each course & class nbr with a `Course Offering Id 18`
+    - Some from CS will not have a `Course Offering Id 18`
 
 ## Production Day (You)
 - Download files from Salesforce
@@ -75,7 +75,6 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
 - In one `main` file with both Summer and Fall terms: 
     - Rename/add additional tabs (`data`, `summary`, `detail`)
     - `data`
-        - Delete UFO?
         - Add in applicable columns (`Honors`, `Honors Course`, `URSP`)
             - Use a character of "1" to denote that this line meets column criteria
             - `Honors` and `Honors Course` can be determined on the sheet
@@ -85,25 +84,29 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
         - Determine the order of which this tab should be sorted
             - Order will be the least picked courses first.
     - `detail`
-        - Delete UFO?
-        - Add _Course Offering Id 18_ to each Class Num
+        - Add `Course Offering Id 18` to each Class Num
         - Add `C_CAPACITY` column
-        - Delete rows without a _Course Offering Id 18_
+        - Delete rows without a `Course Offering Id 18`
 
 ### Run the script 
 - Place files into the `source_files` directory
+- Split the main file into SUMMER and FALL files
 - Run `main.py`
 - Output files will be in the `output_files` directory
+- If more than one version is run, select a version to use in production
+- De-dupe the list of unassigned students to assign holds
+- (optional) recombine the files into one master/final file
 
 ## Registration Day
+
 ### Select and Clean file after run (You)
-    - Remove summer students who were moved to fall (checked for Summer Term Activation)
-        - Can be done prior to running script. 
-    - Remove students from both terms who did not have a term activation in either semester
-        - Can be done prior to running script. 
-    - Rename each CSV file to `qbuenrollfile####.csv` where #### is the term code
-    - Structure for CSV sent to UFIT should be: 
-        - `UFID, STRM, CLASS_NBR`
+- Remove summer students who were moved to fall (checked for Summer Term Activation)
+    - Can be done prior to running script. 
+- Remove students from both terms who did not have a term activation in either semester
+    - Can be done prior to running script. 
+- Rename each CSV file to `qbuenrollfile####.csv` where #### is the term code
+- Structure for CSV sent to UFIT should be: 
+    - `UFID, STRM, CLASS_NBR`
 
 ### Run in Campus Solutions (OUR/Quest/Query Based Update - QBU)
 - Meet with Quest Admin, Registrar's Admin(s), and UFIT 
