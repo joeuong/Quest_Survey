@@ -113,11 +113,13 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
 ### Run in Campus Solutions (OUR/Quest/Query Based Update - QBU)
 - Meet with Quest Admin, Registrar's Admin(s), and UFIT 
     - In 2024, it was Kendall, Chadia/Rachel, and Monica, respectively
-    - In 2025, ... 
+    - In 2025, it was Kendall, Carrie/Rachel, and Monica, respectively
 - Assign Quest Student Groups
     - This allows dropped seats to return to a reserved bucket
 - Generally will excecute in CSMNT1 before running in Production
 - Send file to Quest/Admin UFIT
 
 ## Additional tasks: 
+- Add Preview Student Groups so dropped sections will go back to Preview
 - Send UFIDs for unassigned students to Quest Admin for the Spring Quest Hold
+- Manually add in non-Honors stutdents to Honors seats if available
