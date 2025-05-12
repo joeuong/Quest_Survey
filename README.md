@@ -98,6 +98,9 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
 - If more than one version is run, select a version to use in production
 - De-dupe the list of unassigned students to assign holds
 - (optional) recombine the files into one master/final file
+- Give to OUR/UFIT/Quest as two separate .csv files
+    - One with just the UFID/Term/Class_Nbrs (both terms can go in one file)
+    - One with the students who did not get matched in the script.
 
 ## Registration Day
 
@@ -107,6 +110,7 @@ Direct access to Course data is helpful but not mandatory since Quest Admin (cur
 - Remove students from both terms who did not have a term activation in either semester
     - Can be done prior to running script. 
 - Rename each CSV file to `qbuenrollfile####.csv` where #### is the term code
+    - Can also be done as one file which would make the #### not relevant in this step.
 - Structure for CSV sent to UFIT should be: 
     - `UFID, STRM, CLASS_NBR`
 
